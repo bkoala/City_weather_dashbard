@@ -1,9 +1,18 @@
 var searchFormEl = document.querySelector('#search-form');
+var searchContents = document.querySelector('#search-cities');
 var apiKey="11ea42a7d531af4703b7f0546c96fa70";
-var resultContentEl = document.querySelector('#result-content');
-//var resultContent2 = document.querySelector('#result-2ndcontent');
-var searchCities=JSON.parse(localStorage.getItem("searchCities"));
+
+
    
+//Update the information about searched cities
+//handle_Cities();
+
+function search_Weather (event){
+   console.log(event.target.id);
+   var myId=event.target.id;
+   var cityN = document.getElementById(myId).innerHTML.trim() ;
+   searchApi(cityN,apiKey);
+}
 function handleSearchFormSubmit(event) {
   event.preventDefault();
   var searchcityVal = document.querySelector('#search-input').value;
@@ -16,7 +25,24 @@ function handleSearchFormSubmit(event) {
    searchApi(searchcityVal,apiKey);
   }
 }
-
+function handle_Cities(){
+  // console.log('started');
+   document.getElementById('search-cities').innerHTML = "";
+   var searchCities=JSON.parse(localStorage.getItem("searchCities"));
+   if ( searchCities !== null){
+      for (xx=0; xx<searchCities.length ; xx++){
+        var butSearch=document.createElement('p');
+            butSearch.classList.add('btn','btn-block','btn-primary');
+            butSearch.setAttribute('type','button');
+            butSearch.setAttribute('id','btn-'+xx);
+            butSearch.innerHTML=searchCities[xx];
+            butSearch.setAttribute('style','margin-bottom:20px');
+       searchContents.append(butSearch);
+       var btnEl =document.getElementById("btn-"+xx);
+       btnEl.addEventListener('click',search_Weather);
+      }
+   }
+}
 
 function searchApi(cityName,APIKey) {
 
@@ -43,7 +69,7 @@ function searchApi(cityName,APIKey) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
+     // console.log(data);
       //Display the information
       display_results(data,cityName);
 
@@ -53,6 +79,9 @@ function searchApi(cityName,APIKey) {
 // Runcode here
 function display_results(resultObj,citY){
   // Insert top of card here
+  //Clear previous content
+  document.getElementById('result-content').innerHTML = "";
+  var resultContentEl = document.querySelector('#result-content');
   var resultCard = document.createElement('div');
   var dateToday=moment().format('L');
   
@@ -110,234 +139,25 @@ function display_results(resultObj,citY){
           add_citytoList(citY);   
           
    resultContentEl.append(resultCard,title2,card2); 
-
+   handle_Cities();
 }
 function add_citytoList(name){
-   var searchCities=JSON.parse(localStorage.getItem("searchCities"));
+      
+       var searchCities=JSON.parse(localStorage.getItem("searchCities"));
    if ( searchCities !== null){
       for (xx=0; xx<searchCities.length ; xx++){
-        if (name === searchCities[ii]){
+        if (name.toUpperCase() === searchCities[xx].toUpperCase()){  
            return;
         }
       }
-     searchCities.push(name);
-   }
-   localStorage.setItem("searchCities",JSON.stringify(searchCities));
+      searchCities.push(name);
+      localStorage.setItem("searchCities",JSON.stringify(searchCities));
+   }else{
+      var searchCities=[];
+      searchCities.push(name);
+      localStorage.setItem("searchCities",JSON.stringify(searchCities));
+   }  
+   return;
 }
-
+handle_Cities();
 searchFormEl.addEventListener('submit', handleSearchFormSubmit);
-
-//5days
-1627080602
-
-
-/*api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
-weather: Array(1)
-0: {id: 800, main: "Clear", description: "clear sky", icon: "01d"}
-   var iconCode = data.weather[0].icon;
-and then use that to construct a url which points to the icon,
-
-var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
-and then write that to your html using jQuery (or vanilla JavaScript).
-
-$(".icon").html("<img src='" + iconUrl  + "'>");
-Or to put it all together.
-
-$(".icon").html("<img src='http://openweathermap.org/img/w/" + data.weather[0].icon +                        
-
-{
-   "cod":"200",
-   "message":0.0032,
-   "cnt":36,
-   "list":[
-      {
-         "dt":1487246400,
-         "main":{
-            "temp":286.67,
-            "temp_min":281.556,
-            "temp_max":286.67,
-            "pressure":972.73,
-            "sea_level":1046.46,
-            "grnd_level":972.73,
-            "humidity":75,
-            "temp_kf":5.11
-         },
-         "weather":[
-            {
-               "id":800,
-               "main":"Clear",
-               "description":"clear sky",
-               "icon":"01d"
-            }
-         ],
-         "clouds":{
-            "all":0
-         },
-         "wind":{
-            "speed":1.81,
-            "deg":247.501,
-            "gust": 7.87
-         },
-         "sys":{
-            "pod":"d"
-         },
-         "dt_txt":"2017-02-16 12:00:00"
-      },
-      {
-         "dt":1487257200,
-         "main":{
-            "temp":285.66,
-            "temp_min":281.821,
-            "temp_max":285.66,
-            "pressure":970.91,
-            "sea_level":1044.32,
-            "grnd_level":970.91,
-            "humidity":70,
-            "temp_kf":3.84
-         },
-         "weather":[
-            {
-               "id":800,
-               "main":"Clear",
-               "description":"clear sky",
-               "icon":"01d"
-            }
-         ],
-         "clouds":{
-            "all":0
-         },
-         "wind":{
-            "speed":1.59,
-            "deg":290.501,
-            "gust": 7.87
-         },
-         "sys":{
-            "pod":"d"
-         },
-         "dt_txt":"2017-02-16 15:00:00"
-      },
-      {
-         "dt":1487268000,
-         "main":{
-            "temp":277.05,
-            "temp_min":274.498,
-            "temp_max":277.05,
-            "pressure":970.44,
-            "sea_level":1044.7,
-            "grnd_level":970.44,
-            "humidity":90,
-            "temp_kf":2.56
-         },
-         "weather":[
-            {
-               "id":800,
-               "main":"Clear",
-               "description":"clear sky",
-               "icon":"01n"
-            }
-         ],
-         "clouds":{
-            "all":0
-         },
-         "wind":{
-            "speed":1.41,
-            "deg":263.5,
-            "gust": 7.87
-         },
-         "sys":{
-            "pod":"n"
-         },
-         "dt_txt":"2017-02-16 18:00:00"
-      },
-      ....
-      {
-         "dt":1487624400,
-         "main":{
-            "temp":272.424,
-            "temp_min":272.424,
-            "temp_max":272.424,
-            "pressure":968.38,
-            "sea_level":1043.17,
-            "grnd_level":968.38,
-            "humidity":85,
-            "temp_kf":0
-         },
-         "weather":[
-            {
-               "id":801,
-               "main":"Clouds",
-               "description":"few clouds",
-               "icon":"02n"
-            }
-         ],
-         "clouds":{
-            "all":20
-         },
-         "wind":{
-            "speed":3.57,
-            "deg":255.503,
-            "gust": 7.87
-         },
-         "rain":{
-
-         },
-         "snow":{
-
-         },
-         "sys":{
-            "pod":"n"
-         },
-         "dt_txt":"2017-02-20 21:00:00"
-      }
-   ],
-   "city":{
-      "id":6940463,
-      "name":"Altstadt",
-      "coord":{
-         "lat":48.137,
-         "lon":11.5752
-      },
-      "country":"none"
-   }
-}
-                          
-
-                        
----------------------------------------------------------
-base: "stations" /...base 
-clouds: {all: 40}
-cod: 200
-coord:
-lat: 47.6062
-lon: -122.3321
-__proto__: Object
-dt: 1626928611
-id: 5809844
-main:
-feels_like: 288.79
-humidity: 67
-pressure: 1019
-temp: 289.36
-temp_max: 291.77
-temp_min: 286.86
-__proto__: Object
-name: "Seattle"
-sys:
-country: "US"
-id: 2037795
-sunrise: 1626870829
-sunset: 1626926239
-type: 2
-__proto__: Object
-timezone: -25200
-visibility: 10000
-weather: Array(1)
-0: {id: 802, main: "Clouds", description: "scattered clouds", icon: "03n"}
-length: 1
-__proto__: Array(0)
-wind: {speed: 0.45, deg: 312, gust: 0.89}
-__proto__: Object
-﻿
-mai
-mai
-*/
