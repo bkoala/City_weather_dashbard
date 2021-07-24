@@ -1,7 +1,7 @@
 var searchFormEl = document.querySelector('#search-form');
 var apiKey="11ea42a7d531af4703b7f0546c96fa70";
 var resultContentEl = document.querySelector('#result-content');
-//var resultContent2 = document.querySelector('#result-2ndcontent');
+var resultContent2 = document.querySelector('#result-2ndcontent');
 var searchCities=[];
 
 function handleSearchFormSubmit(event) {
@@ -30,81 +30,102 @@ function searchApi(cityName,APIKey) {
      return response.json();
    })
    .then(function (data) {
-      //console.log(data);
        //Put long and lat in results 
       $laT= data.coord.lat;
       $lonG = data.coord.lon;
-   
     //  console.log($laT + " 12323 ");
 
    // FIND data for forecast
-   var requestUrl="https://api.openweathermap.org/data/2.5/onecall?lat=" + $laT +"&lon=" + $lonG + "&exclude=current,hourly,minutely,alerts" + "&appid=" + APIKey;
+   var requestUrl="https://api.openweathermap.org/data/2.5/onecall?lat=" + $laT +"&lon=" + $lonG + "&exclude=hourly,minutely,alerts" + "&appid=" + APIKey;
     fetch(requestUrl)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      //console.log(data);
-     // var dateToday=moment().format('L'); 
-       display_results(data,cityName);
-
+      console.log(data);
+     // const date = moment.format();
+     var date =  moment(1627082791);
+     console.log(date.toString());
+     //display_results(data);
+      /*
+      display_results(data);
+      for (var i = 0; i < data.length; i++) {
+        var listItem = document.createElement('li');
+        listItem.textContent = data[i].html_url;
+        repoList.appendChild(listItem);
+      }
+   */
     })
   });;
   }
 // Runcode here
-function display_results(resultObj,citY){
+function display_results(resultObj){
   // Insert top of card here
-  var resultCard = document.createElement('div');
-  var dateToday=moment().format('L');
+  var result1Card = document.createElement('div');
   
-  resultCard.classList.add('card', 'bg-light', 'text-dark', 'mb-3', 'p-3');
+  result1Card.classList.add('card', 'bg-light', 'text-dark', 'mb-3', 'p-3');
   var resultBody = document.createElement("div");
-    resultBody.classList.add('card-body');
-
-    var titleEl = document.createElement('h1');
-     titleEl.classList.add('capitalize-first');
-     titleEl.setAttribute('style','font-size:40px')
-     titleEl.textContent = citY + " (" + dateToday +  ") " ;
-    var temP = document.createElement('p');
-    temP.setAttribute('style','font-size:30px,padding-bottom:10px')
+  resultBody.classList.add('card-body');
+  var imgN=document.createElement("img");
+   imgN.setAttribute("src", "cloug.jpg");
+  var titleEl = document.createElement('p');
+  titleEl.append(imgN);
+  titleEl.textContent = resultObj.name + " (" + ") " ;
+  var temP = document.createElement('p');
     temP.innerHTML =
-    '<strong>Temp:' + resultObj.daily[0].temp.day +'</strong> '
-     + '<strong>Wind:' + resultObj.daily[0].wind_speed + '</strong> <br/>'
-       + '<strong>Humidity:' + resultObj.daily[0].humidity + '</strong><br/>' 
-       +'<strong>UV Index: <span>' + resultObj.daily[0].uvi + '</span></strong><br/>';
+    '<strong>Temp:</strong> ' + resultObj.main.temp ;
+   
+    var wind = document.createElement('p');
+    wind.innerHTML =
+      '<strong>Wind:</strong> ' + resultObj.wind.speed + '<br/>'
+       + '<strong>Humidity:</strong> ' + resultObj.main.humidity + '<br/>' 
+       +'<strong>UV Index:</strong> ' + resultObj.wind.speed + '<br/>';
 
-  resultBody.append(titleEl,temP);
-   var title2=document.createElement('p');
-     title2.innerHTML="5-Day Forecast:";
-  var roW2=document.createElement('div');
-      roW2.classList.add('row');
- 
+  resultBody.append(titleEl,temP,wind);
+  result1Card.append(resultBody);
 
-      for (var ii = 1; ii < 6; ii++) {
-          var colI=document.createElement('div');
-              colI.classList.add('col-auto');
-              colI.setAttribute('id','card'+ii);
-              colI.setAttribute('style','background-color:black;color:white;margin:5px;')
-         var texP = document.createElement('p');
-             texP.setAttribute('style','font-size:26px')
-          texP.innerHTML =
-           '<strong>' +  moment().add(ii,'d').format('L') + '</strong><br/>' 
-         +'<strong>Temp:' + resultObj.daily[0].temp.day +'</strong><br/> '
-         +'<strong>Wind:</strong> ' + resultObj.daily[0].wind_speed + '<br/>'
-          + '<strong>Humidity:</strong> ' + resultObj.daily[0].humidity + '<br/>' ;
-          colI.append(texP);
-       roW2.append(colI);
-      }
-     var card2=document.createElement("div")
-         card2.classList.add('card');
-      var resultBody2 = document.createElement("div");
-          resultBody2.classList.add('card-body');
-          resultBody2.append(roW2);
-          card2.append(resultBody2);
-          resultCard.append(resultBody);
-          //Append to content
-   resultContentEl.append(resultCard,title2,card2);     
+//Append second section of Result in another card
+ var result2Card =document.createElement('div');
+     result2Card.classList.add('card','bg-light', 'text-dark');
+  var card2Body=document.createElement('div');
+      card2Body.classList.add('card-body');
+  var titleE2 = document.createElement('h3');
+      titleE2.textContent="5-Day Forecast";
+      var rowCreate=document.createElement('div');
+             rowCreate.classList.add("row")
+          //First day 
+              var col1=document.createElement('div');
+               col1.classList.add('col-auto');
+               col1.setAttribute('style',('background-color:green; color:white'));
 
+                   var dateP = document.createElement('h4');
+                    dateP.textContent="Date 1";
+                    var colP = document.createElement('p');
+                    colP.innerHTML =
+                    '<strong>Temp:</strong> Data <br/>'+
+                      '<strong>Wind:</strong> ' + resultObj.main.humidity + '<br/>'
+                       + '<strong>Humidity:</strong> ' + resultObj.main.humidity + '<br/>'  ; 
+                       col1.append(dateP,colP);
+
+                  resultContentEl.append(result1Card);
+
+               var col2=document.createElement('div');
+               col2.classList.add('col-auto');
+               col2.setAttribute('style',('background-color:green; color:white'));
+               var colP1 = document.createElement('p');
+               var dateP1 = document.createElement('h4');
+               dateP1.textContent="Date 2"
+               colP1.innerHTML =
+               '<strong>Temp:</strong> Data two <br/>'+
+                 '<strong>Wind:</strong> ' + resultObj.main.humidity + '<br/>'
+                  + '<strong>Humidity:</strong> ' + resultObj.main.humidity + '<br/>'  ; 
+                  col1.append(dateP1,colP1);
+               col2.append(dateP1,colP1);
+               rowCreate.append(col1,col2);
+             card2Body.append(titleE2,rowCreate);
+             result2Card.append(card2Body);
+
+  resultContentEl.append(result1Card,result2Card);
 }
 
 
@@ -115,8 +136,7 @@ searchFormEl.addEventListener('submit', handleSearchFormSubmit);
 
 
 /*api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
-weather: Array(1)
-0: {id: 800, main: "Clear", description: "clear sky", icon: "01d"}
+
    var iconCode = data.weather[0].icon;
 and then use that to construct a url which points to the icon,
 

@@ -11,3 +11,22 @@ h6 {
   font-family: 'Merriweather', serif;
   font-weight: 700;
 }
+p{
+  padding-bottom: 10px;
+}
+.row{
+  display: inline-flexbox;
+}
+.col-xs-2{
+  background:#00f;
+  color:#FFF;
+}
+.col-half-offset{
+  margin-left:4.166666667%
+}
+.capitalize-first {
+  text-transform: lowercase;
+}
+.capitalize-first::first-letter {
+  text-transform: uppercase;
+}
