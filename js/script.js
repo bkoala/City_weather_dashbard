@@ -2,8 +2,8 @@ var searchFormEl = document.querySelector('#search-form');
 var apiKey="11ea42a7d531af4703b7f0546c96fa70";
 var resultContentEl = document.querySelector('#result-content');
 //var resultContent2 = document.querySelector('#result-2ndcontent');
-var searchCities=[];
-
+var searchCities=JSON.parse(localStorage.getItem("searchCities"));
+   
 function handleSearchFormSubmit(event) {
   event.preventDefault();
   var searchcityVal = document.querySelector('#search-input').value;
@@ -12,8 +12,7 @@ function handleSearchFormSubmit(event) {
     alert('You need a search input value!');
     return;
   }else{
- // console.log(searchcityVal);
-   searchCities.push(searchcityVal);
+ // search city information   
    searchApi(searchcityVal,apiKey);
   }
 }
@@ -44,9 +43,9 @@ function searchApi(cityName,APIKey) {
       return response.json();
     })
     .then(function (data) {
-      //console.log(data);
-     // var dateToday=moment().format('L'); 
-       display_results(data,cityName);
+      console.log(data);
+      //Display the information
+      display_results(data,cityName);
 
     })
   });;
@@ -57,7 +56,7 @@ function display_results(resultObj,citY){
   var resultCard = document.createElement('div');
   var dateToday=moment().format('L');
   
-  resultCard.classList.add('card', 'bg-light', 'text-dark', 'mb-3', 'p-3');
+  resultCard.classList.add('card');
   var resultBody = document.createElement("div");
     resultBody.classList.add('card-body');
 
@@ -66,32 +65,37 @@ function display_results(resultObj,citY){
      titleEl.setAttribute('style','font-size:40px')
      titleEl.textContent = citY + " (" + dateToday +  ") " ;
     var temP = document.createElement('p');
-    temP.setAttribute('style','font-size:30px,padding-bottom:10px')
+    temP.setAttribute('style','font-size:30px;padding-top:15px')
     temP.innerHTML =
-    '<strong>Temp:' + resultObj.daily[0].temp.day +'</strong> '
-     + '<strong>Wind:' + resultObj.daily[0].wind_speed + '</strong> <br/>'
-       + '<strong>Humidity:' + resultObj.daily[0].humidity + '</strong><br/>' 
-       +'<strong>UV Index: <span>' + resultObj.daily[0].uvi + '</span></strong><br/>';
+    '<strong>Temp: ' + resultObj.daily[0].temp.day +'</strong><br/> '
+     + '<strong>Wind: ' + resultObj.daily[0].wind_speed + '</strong> <br/>'
+       + '<strong>Humidity: ' + resultObj.daily[0].humidity + '</strong><br/>' 
+       +'<strong>UV Index: <span> ' + resultObj.daily[0].uvi + '</span></strong><br/>';
 
   resultBody.append(titleEl,temP);
    var title2=document.createElement('p');
+   title2.setAttribute('style','font-size:40px;padding-top:1.625rem')
      title2.innerHTML="5-Day Forecast:";
   var roW2=document.createElement('div');
       roW2.classList.add('row');
  
 
       for (var ii = 1; ii < 6; ii++) {
+         var iconCode = resultObj.daily[ii].weather[0].icon;
+         var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
           var colI=document.createElement('div');
+           
               colI.classList.add('col-auto');
               colI.setAttribute('id','card'+ii);
               colI.setAttribute('style','background-color:black;color:white;margin:5px;')
          var texP = document.createElement('p');
-             texP.setAttribute('style','font-size:26px')
+             texP.setAttribute('style','font-size:26px;padding-bottom:10px')
           texP.innerHTML =
            '<strong>' +  moment().add(ii,'d').format('L') + '</strong><br/>' 
-         +'<strong>Temp:' + resultObj.daily[0].temp.day +'</strong><br/> '
-         +'<strong>Wind:</strong> ' + resultObj.daily[0].wind_speed + '<br/>'
-          + '<strong>Humidity:</strong> ' + resultObj.daily[0].humidity + '<br/>' ;
+           + '<img src=' + iconUrl  + '><br/>'
+         +'<strong>Temp: ' + resultObj.daily[ii].temp.day +'</strong><br/> '
+         +'<strong>Wind: </strong> ' + resultObj.daily[ii].wind_speed + '<br/>'
+          + '<strong>Humidity: </strong> ' + resultObj.daily[ii].humidity + '<br/>' ;
           colI.append(texP);
        roW2.append(colI);
       }
@@ -103,10 +107,23 @@ function display_results(resultObj,citY){
           card2.append(resultBody2);
           resultCard.append(resultBody);
           //Append to content
-   resultContentEl.append(resultCard,title2,card2);     
+          add_citytoList(citY);   
+          
+   resultContentEl.append(resultCard,title2,card2); 
 
 }
-
+function add_citytoList(name){
+   var searchCities=JSON.parse(localStorage.getItem("searchCities"));
+   if ( searchCities !== null){
+      for (xx=0; xx<searchCities.length ; xx++){
+        if (name === searchCities[ii]){
+           return;
+        }
+      }
+     searchCities.push(name);
+   }
+   localStorage.setItem("searchCities",JSON.stringify(searchCities));
+}
 
 searchFormEl.addEventListener('submit', handleSearchFormSubmit);
 
