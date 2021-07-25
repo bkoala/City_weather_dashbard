@@ -6,7 +6,7 @@ The application uses the  [OpenWeather One Call API](https://openweathermap.org/
 ## User Story
 A user can use the tool to display information about the weather forecast for multiple cities to help him plan a trip accordingly
 
-# How does the application work
+# How does the application work?
 The application presents the user with a search input form
 When the user enter a city name, he is presented with weather
 information forecast for that city. The city is also added to a 
