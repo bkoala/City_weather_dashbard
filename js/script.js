@@ -1,14 +1,27 @@
 var searchFormEl = document.querySelector('#search-form');
 var searchContents = document.querySelector('#search-cities');
 var apiKey="11ea42a7d531af4703b7f0546c96fa70";
-
+var uvclass="uviyellow";
 
    
 //Update the information about searched cities
 //handle_Cities();
+function find_color(xx){
+    var classinfo="uviyellow";
 
+   if (parseFloat(xx) < 3.0){
+    classinfo="uvigreen";
+   }
+   else if ((parseFloat(xx) >=3.0) && ( parseFloat(xx) < 6.0)){
+    classinfo="uviyellow";
+   }
+   else if (parseFloat(xx) >= 6.0){
+    classinfo="uvired";
+   }
+   return classinfo;
+}
 function search_Weather (event){
-   console.log(event.target.id);
+  
    var myId=event.target.id;
    var cityN = document.getElementById(myId).innerHTML.trim() ;
    searchApi(cityN,apiKey);
@@ -26,7 +39,7 @@ function handleSearchFormSubmit(event) {
   }
 }
 function handle_Cities(){
-  // console.log('started');
+  // Update information on searched cities and display
    document.getElementById('search-cities').innerHTML = "";
    var searchCities=JSON.parse(localStorage.getItem("searchCities"));
    if ( searchCities !== null){
@@ -45,36 +58,42 @@ function handle_Cities(){
 }
 
 function searchApi(cityName,APIKey) {
-
-//Find long and lat first
+  var resultContentEl = document.querySelector('#result-content');
+//Find long and lat of city to make a call to get 7 days weather data
 
  var requestUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
 
  fetch(requestUrl)
    .then(function (response) {
+    if (!response.ok) {
+      resultContentEl.innerHTML = '<h2>This city is not in our database, please search again!</h2>';
+      throw response.json();
+    }
      return response.json();
    })
    .then(function (data) {
-      //console.log(data);
+    
        //Put long and lat in results 
       $laT= data.coord.lat;
       $lonG = data.coord.lon;
-   
-    //  console.log($laT + " 12323 ");
+      
 
-   // FIND data for forecast
-   var requestUrl="https://api.openweathermap.org/data/2.5/onecall?lat=" + $laT +"&lon=" + $lonG + "&exclude=current,hourly,minutely,alerts" + "&appid=" + APIKey;
+   // FIND data for forecast for that long and lat
+   var requestUrl="https://api.openweathermap.org/data/2.5/onecall?lat=" + $laT +"&lon=" + $lonG + "&exclude=current,hourly,minutely,alerts" + "&appid=" + APIKey+"&units=imperial";
     fetch(requestUrl)
     .then(function (response) {
+      if (!response.ok) {
+        resultContentEl.innerHTML = '<h2>There is no weather data for this city; please search again!</h2>';
+       throw response.json();
+      }
       return response.json();
     })
-    .then(function (data) {
-     // console.log(data);
-      //Display the information
-      display_results(data,cityName);
+    .then(function (data) {    
+      //Display the weather information for the next five days
+     display_results(data,cityName);
 
     })
-  });;
+  });
   }
 // Runcode here
 function display_results(resultObj,citY){
@@ -87,8 +106,9 @@ function display_results(resultObj,citY){
   
   resultCard.classList.add('card');
   var resultBody = document.createElement("div");
-    resultBody.classList.add('card-body');
-
+      resultBody.classList.add('card-body');
+    //Find uv color code
+    uvclass= find_color(resultObj.daily[0].uvi);
     var titleEl = document.createElement('h1');
      titleEl.classList.add('capitalize-first');
      titleEl.setAttribute('style','font-size:40px')
@@ -96,10 +116,10 @@ function display_results(resultObj,citY){
     var temP = document.createElement('p');
     temP.setAttribute('style','font-size:30px;padding-top:15px')
     temP.innerHTML =
-    '<strong>Temp: ' + resultObj.daily[0].temp.day +'</strong><br/> '
-     + '<strong>Wind: ' + resultObj.daily[0].wind_speed + '</strong> <br/>'
-       + '<strong>Humidity: ' + resultObj.daily[0].humidity + '</strong><br/>' 
-       +'<strong>UV Index: <span> ' + resultObj.daily[0].uvi + '</span></strong><br/>';
+    '<strong>Temp: ' + resultObj.daily[0].temp.day +'&#8457;</strong><br/> '
+     + '<strong>Wind: ' + resultObj.daily[0].wind_speed + ' MPH</strong> <br/>'
+       + '<strong>Humidity: ' + resultObj.daily[0].humidity + ' % </strong><br/>' 
+       +'<strong>UV Index: <span class=' + uvclass + '>' + resultObj.daily[0].uvi + '</span></strong><br/>';
 
   resultBody.append(titleEl,temP);
    var title2=document.createElement('p');
@@ -108,7 +128,7 @@ function display_results(resultObj,citY){
   var roW2=document.createElement('div');
       roW2.classList.add('row');
  
-
+     //Show next five days forecast
       for (var ii = 1; ii < 6; ii++) {
          var iconCode = resultObj.daily[ii].weather[0].icon;
          var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
@@ -122,9 +142,9 @@ function display_results(resultObj,citY){
           texP.innerHTML =
            '<strong>' +  moment().add(ii,'d').format('L') + '</strong><br/>' 
            + '<img src=' + iconUrl  + '><br/>'
-         +'<strong>Temp: ' + resultObj.daily[ii].temp.day +'</strong><br/> '
-         +'<strong>Wind: </strong> ' + resultObj.daily[ii].wind_speed + '<br/>'
-          + '<strong>Humidity: </strong> ' + resultObj.daily[ii].humidity + '<br/>' ;
+         +'<strong>Temp: ' + resultObj.daily[ii].temp.day +'&#8457;</strong><br/> '
+         +'<strong>Wind: </strong> ' + resultObj.daily[ii].wind_speed + ' MPH<br/>'
+          + '<strong>Humidity: </strong> ' + resultObj.daily[ii].humidity + '%<br/>' ;
           colI.append(texP);
        roW2.append(colI);
       }

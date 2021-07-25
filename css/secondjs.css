@@ -984,6 +984,50 @@ a:hover {
   background-color: #aeaeae;
   transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
+.uviyellow {
+  text-align: center;
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  margin: 0;
+  text-decoration: none;
+  font-size: 1.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid transparent;
+  background-color: yellow;
+  outline: none;
+  color: #065b83;
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.uvired{
+  text-align: center;
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  margin: 0;
+  text-decoration: none;
+  font-size: 1.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid transparent;
+  outline: none;
+  color: #ffffff;
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  background-color:red;
+}
+.uvigreen{
+  text-align: center;
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  margin: 0;
+  text-decoration: none;
+  font-size: 1.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid transparent;
+  outline: none;
+  color: #ffffff;
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  background-color:green;
+}
+
 
 .btn:hover {
   background-color: #cecece;

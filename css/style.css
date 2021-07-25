@@ -14,6 +14,12 @@ h6 {
 p{
   padding-bottom: 10px;
 }
+hr{
+  height:5px;
+  color:gray;
+  background-color:black;
+  margin: 20px 0;
+}
 .row{
   display: inline-flexbox;
 }
