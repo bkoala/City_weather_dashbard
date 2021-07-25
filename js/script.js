@@ -5,7 +5,7 @@ var uvclass="uviyellow";
 
    
 //Update the information about searched cities
-//handle_Cities();
+//Show different colors based on uvi index;
 function find_color(xx){
     var classinfo="uviyellow";
 
