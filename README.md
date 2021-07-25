@@ -18,6 +18,6 @@ The future weather conditions for that city are presented with a 5-day forecast 
 When the user clicks on a city in the search history
 he is presented with current and future conditions for that city
 
-Application Page Link : https://bkoala.github.io/City_weather_dashboard/
+Application Page Link :https://bkoala.github.io/City_weather_dashbard/
 
 Application Screen Shot : ![Screenshot](weather_screenshot.png)
