@@ -17,3 +17,7 @@ The UV index color indicates whether the conditions are green for Uvi index less
 The future weather conditions for that city are presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, the wind speed, and the humidity.
 When the user clicks on a city in the search history
 he is presented with current and future conditions for that city
+
+Application Page Link : https://bkoala.github.io/City_weather_dashboard/
+
+Application Screen Shot : ![Screenshot](weather_screenshot.png)
