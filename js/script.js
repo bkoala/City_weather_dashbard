@@ -61,7 +61,7 @@ function searchApi(cityName,APIKey) {
   var resultContentEl = document.querySelector('#result-content');
 //Find long and lat of city to make a call to get 7 days weather data
 
- var requestUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
+ var requestUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
 
  fetch(requestUrl)
    .then(function (response) {
