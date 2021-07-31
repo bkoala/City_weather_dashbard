@@ -131,7 +131,7 @@ function display_results(resultObj,citY){
      //Show next five days forecast
       for (var ii = 1; ii < 6; ii++) {
          var iconCode = resultObj.daily[ii].weather[0].icon;
-         var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
+         var iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png";
           var colI=document.createElement('div');
            
               colI.classList.add('col-auto');
