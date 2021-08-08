@@ -21,3 +21,5 @@ he is presented with current and future conditions for that city
 Application Page Link :https://bkoala.github.io/City_weather_dashbard/
 
 Application Screen Shot : ![Screenshot](weather_screenshot.png)
+
+Application Screen Shot : ![Screenshot](screenshot2.png)
